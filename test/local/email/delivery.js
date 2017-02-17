@@ -105,10 +105,39 @@ describe('delivery messages', () => {
 
       return mockedDelivery(mockLog).handleDelivery(mockMsg).then(function () {
         assert.equal(mockLog.messages.length, 3)
+        assert.equal(mockLog.messages[1].args[0]['email'], 'jane@example.com')
+        assert.equal(mockLog.messages[1].args[0]['domain'], 'other')
         assert.equal(mockLog.messages[0].args[0]['event'], 'email.verifyLoginEmail.delivered')
         assert.equal(mockLog.messages[0].args[0]['flow_id'], 'someFlowId')
         assert.equal(mockLog.messages[0].args[0]['flow_time'] > 0, true)
         assert.equal(mockLog.messages[0].args[0]['time'] > 0, true)
+      })
+    }
+  )
+
+  it(
+    'should log popular email domain',
+    () => {
+      const mockLog = spyLog()
+      const mockMsg = mockMessage({
+        notificationType: 'Delivery',
+        delivery: {
+          timestamp: '2016-01-27T14:59:38.237Z',
+          recipients: ['jane@email.com'],
+          processingTimeMillis: 546,
+          reportingMTA: 'a8-70.smtp-out.amazonses.com',
+          smtpResponse: '250 ok:  Message 64111812 accepted',
+          remoteMtaIp: '127.0.2.0'
+        },
+        mail: {
+          headers: []
+        }
+      })
+
+      return mockedDelivery(mockLog).handleDelivery(mockMsg).then(function () {
+        assert.equal(mockLog.messages.length, 3)
+        assert.equal(mockLog.messages[1].args[0]['email'], 'jane@email.com')
+        assert.equal(mockLog.messages[1].args[0]['domain'], 'email.com')
       })
     }
   )

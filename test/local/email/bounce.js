@@ -162,6 +162,7 @@ describe('bounce messages', () => {
         assert.equal(mockLog.messages.length, 8)
         assert.equal(mockLog.messages[1].args[0].op, 'handleBounce')
         assert.equal(mockLog.messages[1].args[0].email, 'test@example.com')
+        assert.equal(mockLog.messages[1].args[0].domain, 'other')
         assert.equal(mockLog.messages[1].args[0].status, '5.0.0')
         assert.equal(mockLog.messages[1].args[0].action, 'failed')
         assert.equal(mockLog.messages[1].args[0].diagnosticCode, 'smtp; 550 user unknown')
@@ -403,6 +404,45 @@ describe('bounce messages', () => {
         assert.equal(mockLog.messages[0].args[0]['flow_id'], 'someFlowId')
         assert.equal(mockLog.messages[0].args[0]['flow_time'] > 0, true)
         assert.equal(mockLog.messages[0].args[0]['time'] > 0, true)
+      })
+    }
+  )
+
+  it(
+    'should log email domain if popular one',
+    () => {
+      var mockLog = spyLog()
+      var mockDB = {
+        createEmailBounce: sinon.spy(() => P.resolve({})),
+        emailRecord: sinon.spy(function (email) {
+          return P.resolve({
+            uid: '123456',
+            email: email,
+            emailVerified: false
+          })
+        }),
+        deleteAccount: sinon.spy(function () {
+          return P.resolve({ })
+        })
+      }
+      var mockMsg = mockMessage({
+        bounce: {
+          bounceType: 'Permanent',
+          bounceSubType: 'General',
+          bouncedRecipients: [
+            {emailAddress: 'test@email.com'}
+          ]
+        },
+        mail: {
+          headers: []
+        }
+      })
+
+      return mockedBounces(mockLog, mockDB).handleBounce(mockMsg).then(function () {
+        assert.equal(mockLog.messages.length, 4)
+        assert.equal(mockLog.messages[1].args[0]['email'], 'test@email.com')
+        assert.equal(mockLog.messages[1].args[0]['domain'], 'email.com')
+
       })
     }
   )
