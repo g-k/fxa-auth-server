@@ -123,7 +123,7 @@ describe('delivery messages', () => {
         notificationType: 'Delivery',
         delivery: {
           timestamp: '2016-01-27T14:59:38.237Z',
-          recipients: ['jane@email.com'],
+          recipients: ['jane@aol.com'],
           processingTimeMillis: 546,
           reportingMTA: 'a8-70.smtp-out.amazonses.com',
           smtpResponse: '250 ok:  Message 64111812 accepted',
@@ -136,8 +136,8 @@ describe('delivery messages', () => {
 
       return mockedDelivery(mockLog).handleDelivery(mockMsg).then(function () {
         assert.equal(mockLog.messages.length, 3)
-        assert.equal(mockLog.messages[1].args[0]['email'], 'jane@email.com')
-        assert.equal(mockLog.messages[1].args[0]['domain'], 'email.com')
+        assert.equal(mockLog.messages[1].args[0]['email'], 'jane@aol.com')
+        assert.equal(mockLog.messages[1].args[0]['domain'], 'aol.com')
       })
     }
   )

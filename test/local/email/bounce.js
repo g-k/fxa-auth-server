@@ -430,7 +430,7 @@ describe('bounce messages', () => {
           bounceType: 'Permanent',
           bounceSubType: 'General',
           bouncedRecipients: [
-            {emailAddress: 'test@email.com'}
+            {emailAddress: 'test@aol.com'}
           ]
         },
         mail: {
@@ -440,8 +440,8 @@ describe('bounce messages', () => {
 
       return mockedBounces(mockLog, mockDB).handleBounce(mockMsg).then(function () {
         assert.equal(mockLog.messages.length, 4)
-        assert.equal(mockLog.messages[1].args[0]['email'], 'test@email.com')
-        assert.equal(mockLog.messages[1].args[0]['domain'], 'email.com')
+        assert.equal(mockLog.messages[1].args[0]['email'], 'test@aol.com')
+        assert.equal(mockLog.messages[1].args[0]['domain'], 'aol.com')
 
       })
     }
