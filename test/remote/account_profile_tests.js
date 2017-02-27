@@ -5,11 +5,13 @@
 'use strict'
 
 const assert = require('insist')
-var path = require('path')
-var TestServer = require('../test_server')
+const path = require('path')
+const TestServer = require('../test_server')
 const Client = require('../client')()
 
-var config = require('../../config').getProperties()
+const config = require('../../config').getProperties()
+
+config.geodb.enabled = false
 
 function makeMockOAuthHeader(opts) {
   var token = Buffer.from(JSON.stringify(opts)).toString('hex')

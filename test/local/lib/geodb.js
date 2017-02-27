@@ -5,7 +5,6 @@
 'use strict'
 
 const assert = require('insist')
-const proxyquire = require('proxyquire')
 const mockLog = require('../../mocks').mockLog
 const modulePath = '../../../lib/geodb'
 
@@ -13,20 +12,11 @@ describe('geodb', () => {
   it(
     'returns location data when enabled',
     () => {
-      const moduleMocks = {
-        '../config': {
-          'get': function (item) {
-            if (item === 'geodb') {
-              return {
-                enabled: true
-              }
-            }
-          }
-        }
-      }
       const thisMockLog = mockLog({})
 
-      const getGeoData = proxyquire(modulePath, moduleMocks)(thisMockLog)
+      const getGeoData = require(modulePath)(thisMockLog, {
+        enabled: true
+      })
       return getGeoData('63.245.221.32') // MTV
       .then(function (geoData) {
         assert.equal(geoData.location.city, 'Mountain View')
@@ -41,20 +31,11 @@ describe('geodb', () => {
   it(
     'returns empty object data when disabled',
     () => {
-      const moduleMocks = {
-        '../config': {
-          'get': function (item) {
-            if (item === 'geodb') {
-              return {
-                enabled: false
-              }
-            }
-          }
-        }
-      }
       const thisMockLog = mockLog({})
 
-      const getGeoData = proxyquire(modulePath, moduleMocks)(thisMockLog)
+      const getGeoData = require(modulePath)(thisMockLog, {
+        enabled: false
+      })
       return getGeoData('8.8.8.8')
       .then(function (geoData) {
         assert.deepEqual(geoData, {})

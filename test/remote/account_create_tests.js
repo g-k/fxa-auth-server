@@ -8,8 +8,10 @@ const assert = require('insist')
 var TestServer = require('../test_server')
 var crypto = require('crypto')
 const Client = require('../client')()
-var config = require('../../config').getProperties()
+const config = require('../../config').getProperties()
 const mocks = require('../mocks')
+
+config.geodb.enabled = false
 
 describe('remote account create', function() {
   this.timeout(15000)

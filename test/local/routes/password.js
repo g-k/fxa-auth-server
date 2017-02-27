@@ -21,7 +21,10 @@ var TEST_EMAIL = 'foo@gmail.com'
 function makeRoutes(options) {
   options = options || {}
 
-  var config = options.config || {
+  const config = options.config || {
+    geodb: {
+      enabled: false
+    },
     verifierVersion: 0,
     smtp: {}
   }
@@ -36,9 +39,8 @@ function makeRoutes(options) {
     error,
     db,
     Password,
-    config.smtp.redirectDomain || '',
     options.mailer || {},
-    config.verifierVersion,
+    config,
     options.customs || {},
     checkPassword,
     options.push || {}
@@ -73,6 +75,13 @@ describe('/password', () => {
         return P.resolve()
       })
       var passwordRoutes = makeRoutes({
+        config: {
+          geodb: {
+            enabled: true
+          },
+          verifierVersion: 0,
+          smtp: {}
+        },
         customs: mockCustoms,
         db: mockDB,
         mailer : mockMailer,
@@ -284,6 +293,13 @@ describe('/password', () => {
         log: mockLog
       })
       var passwordRoutes = makeRoutes({
+        config: {
+          geodb: {
+            enabled: true
+          },
+          verifierVersion: 0,
+          smtp: {}
+        },
         db: mockDB,
         push: mockPush,
         mailer: mockMailer,

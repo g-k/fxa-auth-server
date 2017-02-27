@@ -10,7 +10,7 @@ var config = require('../config').getProperties()
 var jwtool = require('fxa-jwtool')
 
 var log = require('../lib/log')(config.log.level)
-var getGeoData = require('../lib/geodb')(log)
+const getGeoData = require('../lib/geodb')(log, config.geodb)
 
 function main() {
   // Force the geo to load and run at startup, not waiting for it to run on

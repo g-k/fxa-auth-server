@@ -5,18 +5,20 @@
 'use strict'
 
 const assert = require('insist')
-var TestServer = require('../test_server')
+const TestServer = require('../test_server')
 const Client = require('../client')()
-var jwtool = require('fxa-jwtool')
+const jwtool = require('fxa-jwtool')
 
-var config = require('../../config').getProperties()
-var pubSigKey = jwtool.JWK.fromFile(config.publicKeyFile)
+const config = require('../../config').getProperties()
+const pubSigKey = jwtool.JWK.fromFile(config.publicKeyFile)
 
-var publicKey = {
+const publicKey = {
   'algorithm': 'RS',
   'n': '4759385967235610503571494339196749614544606692567785790953934768202714280652973091341316862993582789079872007974809511698859885077002492642203267408776123',
   'e': '65537'
 }
+
+config.geodb.enabled = false
 
 describe('remote certificate sign', function() {
   this.timeout(15000)

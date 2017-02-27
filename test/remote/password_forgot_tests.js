@@ -5,14 +5,16 @@
 'use strict'
 
 const assert = require('insist')
-var url = require('url')
+const url = require('url')
 const Client = require('../client')()
-var TestServer = require('../test_server')
-var crypto = require('crypto')
-var base64url = require('base64url')
+const TestServer = require('../test_server')
+const crypto = require('crypto')
+const base64url = require('base64url')
 
-var config = require('../../config').getProperties()
+const config = require('../../config').getProperties()
 const mocks = require('../mocks')
+
+config.geodb.enabled = false
 
 describe('remote password forgot', function() {
   this.timeout(15000)

@@ -5,16 +5,16 @@
 'use strict'
 
 const assert = require('insist')
-var P = require('../../lib/promise')
-var uuid = require('uuid')
-var crypto = require('crypto')
-var base64url = require('base64url')
-var proxyquire = require('proxyquire')
+const P = require('../../lib/promise')
+const uuid = require('uuid')
+const crypto = require('crypto')
+const base64url = require('base64url')
+const proxyquire = require('proxyquire')
 const log = { trace () {}, info () {}, error () {} }
 
-var config = require('../../config').getProperties()
-var TestServer = require('../test_server')
-var Token = require('../../lib/tokens')(log)
+const config = require('../../config').getProperties()
+const TestServer = require('../test_server')
+const Token = require('../../lib/tokens')(log)
 const DB = require('../../lib/db')(
   config,
   log,
@@ -52,6 +52,8 @@ var mockLog = {
   info: function () {
   }
 }
+
+config.geodb.enabled = false
 
 describe('remote push db', function() {
   this.timeout(15000)

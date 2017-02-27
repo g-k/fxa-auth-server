@@ -6,9 +6,11 @@
 
 const assert = require('insist')
 const Client = require('../client')()
-var TestServer = require('../test_server')
+const TestServer = require('../test_server')
 
-var config = require('../../config').getProperties()
+const config = require('../../config').getProperties()
+
+config.geodb.enabled = false
 
 describe('remote recovery email resend code', function() {
   this.timeout(15000)

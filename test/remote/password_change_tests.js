@@ -6,11 +6,13 @@
 
 const assert = require('insist')
 const Client = require('../client')()
-var config = require('../../config').getProperties()
-var TestServer = require('../test_server')
-var url = require('url')
+const config = require('../../config').getProperties()
+const TestServer = require('../test_server')
+const url = require('url')
+const tokens = require('../../lib/tokens')({ trace: function() {}})
 
-var tokens = require('../../lib/tokens')({ trace: function() {}})
+config.geodb.enabled = false
+
 function getSessionTokenId(sessionTokenHex) {
   return tokens.SessionToken.fromHex(sessionTokenHex)
     .then(

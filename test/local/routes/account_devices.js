@@ -21,6 +21,9 @@ var makeRoutes = function (options, requireMocks) {
   options = options || {}
 
   var config = options.config || {}
+  config.geodb = config.geodb || {
+    enabled: false
+  }
   config.verifierVersion = config.verifierVersion || 0
   config.smtp = config.smtp ||  {}
   config.memcached = config.memcached || {
@@ -79,7 +82,11 @@ function runTest (route, request, assertions) {
 }
 
 describe('/account/device', function () {
-  var config = {}
+  const config = {
+    geodb: {
+      enabled: false
+    }
+  }
   var uid = uuid.v4('binary')
   var deviceId = crypto.randomBytes(16)
   var mockRequest = mocks.mockRequest({
@@ -178,7 +185,11 @@ describe('/account/device', function () {
 })
 
 describe('/account/devices/notify', function () {
-  var config = {}
+  const config = {
+    geodb: {
+      enabled: false
+    }
+  }
   var uid = uuid.v4('binary')
   var mockRequest = mocks.mockRequest({
     credentials: {

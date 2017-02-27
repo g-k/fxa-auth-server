@@ -5,12 +5,13 @@
 'use strict'
 
 const assert = require('insist')
-var TestServer = require('../test_server')
+const TestServer = require('../test_server')
 const Client = require('../client')()
-var P = require('../../lib/promise')
+const P = require('../../lib/promise')
 
-var config = require('../../config').getProperties()
+const config = require('../../config').getProperties()
 
+config.geodb.enabled = false
 
 describe('remote concurrect', function() {
   this.timeout(15000)

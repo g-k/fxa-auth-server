@@ -6,12 +6,14 @@
 
 const assert = require('insist')
 const Client = require('../client')()
-var TestServer = require('../test_server')
-var jwtool = require('fxa-jwtool')
+const TestServer = require('../test_server')
+const jwtool = require('fxa-jwtool')
 
-var config = require('../../config').getProperties()
+const config = require('../../config').getProperties()
 
-var pubSigKey = jwtool.JWK.fromFile(config.publicKeyFile)
+const pubSigKey = jwtool.JWK.fromFile(config.publicKeyFile)
+
+config.geodb.enabled = false
 
 describe('remote flow', function() {
   this.timeout(15000)

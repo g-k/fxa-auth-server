@@ -24,6 +24,9 @@ var makeRoutes = function (options, requireMocks) {
   options = options || {}
 
   var config = options.config || {}
+  config.geodb = config.geodb || {
+    enabled: false
+  }
   config.verifierVersion = config.verifierVersion || 0
   config.smtp = config.smtp ||  {}
   config.memcached = config.memcached || {
@@ -117,6 +120,9 @@ describe('/account/reset', function () {
     var mockPush = mocks.mockPush()
     var accountRoutes = makeRoutes({
       config: {
+        geodb: {
+          enabled: false
+        },
         securityHistory: {
           enabled: true
         }
@@ -259,6 +265,15 @@ describe('/account/create', () => {
         }
       },
       push: mockPush
+    }, {
+      '../geodb': () => {
+        return () => P.resolve({
+          location: {
+            city: 'mock city',
+            country: 'mock country'
+          }
+        })
+      }
     })
     var route = getRoute(accountRoutes, '/account/create')
 
@@ -342,8 +357,8 @@ describe('/account/create', () => {
 
       assert.equal(mockMailer.sendVerifyCode.callCount, 1, 'mailer.sendVerifyCode was called')
       args = mockMailer.sendVerifyCode.args[0]
-      assert.equal(args[2].location.city, 'Mountain View')
-      assert.equal(args[2].location.country, 'United States')
+      assert.equal(args[2].location.city, 'mock city')
+      assert.equal(args[2].location.country, 'mock country')
       assert.equal(args[2].uaBrowser, 'Firefox')
       assert.equal(args[2].uaBrowserVersion, '52')
       assert.equal(args[2].uaOS, 'Mac OS X')
@@ -478,6 +493,16 @@ describe('/account/login', function () {
     log: mockLog,
     mailer: mockMailer,
     push: mockPush
+  }, {
+    '../geodb': () => {
+      return () => P.resolve({
+        location: {
+          city: 'another mock city',
+          country: 'another mock country',
+        },
+        timeZone: 'mock timezone'
+      })
+    }
   })
   var route = getRoute(accountRoutes, '/account/login')
 
@@ -586,9 +611,9 @@ describe('/account/login', function () {
 
       assert.equal(mockMailer.sendVerifyLoginEmail.callCount, 1, 'mailer.sendVerifyLoginEmail was called')
       args = mockMailer.sendVerifyLoginEmail.args[0]
-      assert.equal(args[2].location.city, 'Mountain View')
-      assert.equal(args[2].location.country, 'United States')
-      assert.equal(args[2].timeZone, 'America/Los_Angeles')
+      assert.equal(args[2].location.city, 'another mock city')
+      assert.equal(args[2].location.country, 'another mock country')
+      assert.equal(args[2].timeZone, 'mock timezone')
       assert.equal(args[2].uaBrowser, 'Firefox')
       assert.equal(args[2].uaBrowserVersion, '50')
       assert.equal(args[2].uaOS, 'Android')
@@ -673,9 +698,9 @@ describe('/account/login', function () {
         assert.equal(response.verificationReason, 'login', 'verificationReason is login')
 
         assert.equal(mockMailer.sendVerifyLoginEmail.callCount, 1, 'mailer.sendVerifyLoginEmail was called')
-        assert.equal(mockMailer.sendVerifyLoginEmail.getCall(0).args[2].location.city, 'Mountain View')
-        assert.equal(mockMailer.sendVerifyLoginEmail.getCall(0).args[2].location.country, 'United States')
-        assert.equal(mockMailer.sendVerifyLoginEmail.getCall(0).args[2].timeZone, 'America/Los_Angeles')
+        assert.equal(mockMailer.sendVerifyLoginEmail.getCall(0).args[2].location.city, 'another mock city')
+        assert.equal(mockMailer.sendVerifyLoginEmail.getCall(0).args[2].location.country, 'another mock country')
+        assert.equal(mockMailer.sendVerifyLoginEmail.getCall(0).args[2].timeZone, 'mock timezone')
       })
     })
 
@@ -779,6 +804,16 @@ describe('/account/login', function () {
           log: mockLog,
           mailer: mockMailer,
           push: mockPush
+        }, {
+          '../geodb': () => {
+            return () => P.resolve({
+              location: {
+                city: 'foo',
+                country: 'bar'
+              },
+              timeZone: 'baz'
+            })
+          }
         })
 
         route = getRoute(accountRoutes, '/account/login')
@@ -799,9 +834,9 @@ describe('/account/login', function () {
           assert.equal(response.verificationReason, 'login', 'verificationReason is login')
 
           assert.equal(mockMailer.sendVerifyLoginEmail.callCount, 1, 'mailer.sendVerifyLoginEmail was called')
-          assert.equal(mockMailer.sendVerifyLoginEmail.getCall(0).args[2].location.city, 'Mountain View')
-          assert.equal(mockMailer.sendVerifyLoginEmail.getCall(0).args[2].location.country, 'United States')
-          assert.equal(mockMailer.sendVerifyLoginEmail.getCall(0).args[2].timeZone, 'America/Los_Angeles')
+          assert.equal(mockMailer.sendVerifyLoginEmail.getCall(0).args[2].location.city, 'foo')
+          assert.equal(mockMailer.sendVerifyLoginEmail.getCall(0).args[2].location.country, 'bar')
+          assert.equal(mockMailer.sendVerifyLoginEmail.getCall(0).args[2].timeZone, 'baz')
         })
       })
 
@@ -1152,7 +1187,10 @@ describe('/account/destroy', function () {
         return P.resolve(true)
       },
       config: {
-        domain: 'wibble'
+        domain: 'wibble',
+        geodb: {
+          enabled: false
+        }
       },
       db: mockDB,
       log: mockLog

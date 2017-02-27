@@ -8,12 +8,14 @@ const assert = require('insist')
 const TestServer = require('../test_server')
 const Client = require('../client')()
 
-var config = require('../../config').getProperties()
-var key = {
+const config = require('../../config').getProperties()
+const key = {
   'algorithm': 'RS',
   'n': '4759385967235610503571494339196749614544606692567785790953934768202714280652973091341316862993582789079872007974809511698859885077002492642203267408776123',
   'e': '65537'
 }
+
+config.geodb.enabled = false
 
 describe('remote account locale', function() {
   this.timeout(15000)

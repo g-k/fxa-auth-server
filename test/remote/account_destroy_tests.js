@@ -10,6 +10,8 @@ const Client = require('../client')()
 
 const config = require('../../config').getProperties()
 
+config.geodb.enabled = false
+
 describe('remote account destroy', () => {
 
   let server

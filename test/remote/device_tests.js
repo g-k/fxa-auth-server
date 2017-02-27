@@ -5,12 +5,14 @@
 'use strict'
 
 const assert = require('insist')
-var TestServer = require('../test_server')
+const TestServer = require('../test_server')
 const Client = require('../client')()
-var config = require('../../config').getProperties()
-var crypto = require('crypto')
-var base64url = require('base64url')
-var P = require('../../lib/promise')
+const config = require('../../config').getProperties()
+const crypto = require('crypto')
+const base64url = require('base64url')
+const P = require('../../lib/promise')
+
+config.geodb.enabled = false
 
 describe('remote device', function() {
   this.timeout(15000)

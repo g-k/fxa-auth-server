@@ -6,10 +6,12 @@
 
 const assert = require('assert')
 const Client = require('../client')()
-var crypto = require('crypto')
-var TestServer = require('../test_server')
+const crypto = require('crypto')
+const TestServer = require('../test_server')
 
-var config = require('../../config').getProperties()
+const config = require('../../config').getProperties()
+
+config.geodb.enabled = false
 
 describe('remote account login', () => {
   let server

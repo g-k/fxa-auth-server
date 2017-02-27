@@ -5,7 +5,7 @@
 'use strict'
 
 const assert = require('insist')
-var TestServer = require('../test_server')
+const TestServer = require('../test_server')
 const Client = require('../client')()
 
 function fail() { throw new Error() }
@@ -16,6 +16,7 @@ describe('remote token expiry', function() {
   before(() => {
     process.env.PASSWORD_CHANGE_TOKEN_TTL = '1'
     config = require('../../config').getProperties()
+    config.geodb.enabled = false
 
     return TestServer.start(config)
       .then(s => {

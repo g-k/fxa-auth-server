@@ -5,18 +5,20 @@
 'use strict'
 
 const assert = require('insist')
-var TestServer = require('../test_server')
+const TestServer = require('../test_server')
 const Client = require('../client')()
-var JWTool = require('fxa-jwtool')
+const JWTool = require('fxa-jwtool')
 
-var config = require('../../config').getProperties()
-var secretKey = JWTool.JWK.fromFile(
+const config = require('../../config').getProperties()
+const secretKey = JWTool.JWK.fromFile(
   config.secretKeyFile,
   {
     jku: config.publicUrl + '/.well-known/public-keys',
     kid: 'dev-1'
   }
 )
+
+config.geodb.enabled = false
 
 function fail() { throw new Error('call succeeded when it should have failed')}
 

@@ -18,6 +18,9 @@ var makeRoutes = function (options, requireMocks) {
   options = options || {}
 
   var config = options.config || {}
+  config.geodb = config.geodb || {
+    enabled: false
+  }
   config.verifierVersion = config.verifierVersion || 0
   config.smtp = config.smtp ||  {}
   config.memcached = config.memcached || {
@@ -95,6 +98,9 @@ describe('/account/login/send_unblock_code', function () {
     email: email
   })
   var config = {
+    geodb: {
+      enabled: false
+    },
     signinUnblock: {}
   }
   var accountRoutes = makeRoutes({

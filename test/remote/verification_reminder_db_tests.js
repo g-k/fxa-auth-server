@@ -5,13 +5,13 @@
 'use strict'
 
 const assert = require('insist')
-var uuid = require('uuid')
-var log = { trace() {}, info() {} }
+const uuid = require('uuid')
+const log = { trace() {}, info() {} }
 
-var config = require('../../config').getProperties()
-var TestServer = require('../test_server')
-var Token = require('../../lib/tokens')(log)
-var DB = require('../../lib/db')(
+const config = require('../../config').getProperties()
+const TestServer = require('../test_server')
+const Token = require('../../lib/tokens')(log)
+const DB = require('../../lib/db')(
   config,
   log,
   Token.error,
@@ -22,8 +22,8 @@ var DB = require('../../lib/db')(
   Token.PasswordChangeToken
 )
 
-var zeroBuffer16 = Buffer('00000000000000000000000000000000', 'hex')
-var zeroBuffer32 = Buffer('0000000000000000000000000000000000000000000000000000000000000000', 'hex')
+const zeroBuffer16 = Buffer('00000000000000000000000000000000', 'hex')
+const zeroBuffer32 = Buffer('0000000000000000000000000000000000000000000000000000000000000000', 'hex')
 
 function createTestAccount() {
   return {
@@ -40,7 +40,9 @@ function createTestAccount() {
   }
 }
 
-var mockLog = require('../mocks').mockLog
+const mockLog = require('../mocks').mockLog
+
+config.geodb.enabled = false
 
 describe('remote verification reminder db', function() {
   this.timeout(15000)

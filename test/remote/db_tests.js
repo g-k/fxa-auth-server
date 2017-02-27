@@ -5,15 +5,15 @@
 'use strict'
 
 const assert = require('insist')
-var uuid = require('uuid')
-var crypto = require('crypto')
-var base64url = require('base64url')
+const uuid = require('uuid')
+const crypto = require('crypto')
+const base64url = require('base64url')
 const log = { trace () {}, info () {}, error () {} }
 
-var config = require('../../config').getProperties()
-var P = require('../../lib/promise')
-var UnblockCode = require('../../lib/crypto/base32')(config.signinUnblock.codeLength)
-var TestServer = require('../test_server')
+const config = require('../../config').getProperties()
+const P = require('../../lib/promise')
+const UnblockCode = require('../../lib/crypto/base32')(config.signinUnblock.codeLength)
+const TestServer = require('../test_server')
 const lastAccessTimeUpdates = {
   enabled: true,
   enabledEmailAddresses: /.*/,
@@ -51,6 +51,8 @@ var ACCOUNT = {
   wrapWrapKb: zeroBuffer32,
   tokenVerificationId: zeroBuffer16
 }
+
+config.geodb.enabled = false
 
 describe('remote db', function() {
   this.timeout(20000)

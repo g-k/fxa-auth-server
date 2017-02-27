@@ -4,13 +4,11 @@
 
 'use strict'
 
-
 const assert = require('insist')
-var TestServer = require('../test_server')
+const TestServer = require('../test_server')
 const Client = require('../client')()
-var P = require('../../lib/promise')
-var request = P.promisify(require('request'))
-
+const P = require('../../lib/promise')
+const request = P.promisify(require('request'))
 
 describe('remote base path', function() {
   this.timeout(15000)
@@ -19,6 +17,7 @@ describe('remote base path', function() {
     process.env.PUBLIC_URL = 'http://127.0.0.1:9000/auth'
     config = require('../../config').getProperties()
     config.publicUrl = process.env.PUBLIC_URL
+    config.geodb.enabled = false
     return TestServer.start(config)
       .then(s => {
         server = s

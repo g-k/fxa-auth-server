@@ -5,15 +5,15 @@
 'use strict'
 
 const assert = require('insist')
-var TestServer = require('../test_server')
+const TestServer = require('../test_server')
 const Client = require('../client')()
-var createDBServer = require('fxa-auth-db-mysql')
-var log = { trace() {} }
+const createDBServer = require('fxa-auth-db-mysql')
+const log = { trace() {} }
 
-var config = require('../../config').getProperties()
+const config = require('../../config').getProperties()
 
-var Token = require('../../lib/tokens')(log)
-var DB = require('../../lib/db')(
+const Token = require('../../lib/tokens')(log)
+const DB = require('../../lib/db')(
   config,
   log,
   Token.error,
@@ -23,6 +23,8 @@ var DB = require('../../lib/db')(
   Token.PasswordForgotToken,
   Token.PasswordChangeToken
 )
+
+config.geodb.enabled = false
 
 describe('remote verifier upgrade', function() {
   this.timeout(30000)

@@ -5,9 +5,9 @@
 'use strict'
 
 const assert = require('insist')
-var P = require('bluebird')
-var TestServer = require('../test_server')
-var request = P.promisify(require('request'))
+const P = require('bluebird')
+const TestServer = require('../test_server')
+const request = P.promisify(require('request'))
 
 describe('remote hpkp', function() {
   this.timeout(30000)
@@ -17,8 +17,9 @@ describe('remote hpkp', function() {
     () => {
       process.env.HPKP_ENABLE = true
       process.env.HPKP_PIN_SHA256 = []
-      var Server = require('../../lib/server')
-      var config = require('../../config').getProperties()
+      const Server = require('../../lib/server')
+      const config = require('../../config').getProperties()
+      config.geodb.enabled = false
       assert.throws(() => {
         Server.create({},{},config,{})
       }, 'ValidationError: child "sha256s" fails because ["sha256s" must contain at least 1 items]', 'assert server error if no sha passed')

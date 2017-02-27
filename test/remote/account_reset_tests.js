@@ -5,11 +5,13 @@
 'use strict'
 
 const assert = require('insist')
-var url = require('url')
+const url = require('url')
 const Client = require('../client')()
-var TestServer = require('../test_server')
+const TestServer = require('../test_server')
 
-var config = require('../../config').getProperties()
+const config = require('../../config').getProperties()
+
+config.geodb.enabled = false
 
 describe('remote account reset', function() {
   this.timeout(15000)
