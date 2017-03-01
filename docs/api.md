@@ -160,6 +160,7 @@ Since this is a HTTP-based protocol, clients should be prepared to gracefully ha
 
 * Send SMS
     * [POST /v1/sms (:lock: sessionToken)](#post-v1sms)
+    * [GET /v1/sms/status (:lock: sessionToken)](#get-v1smsstatus)
 
 * Miscellaneous
     * [POST /v1/get_random_bytes](#post-v1get_random_bytes)
@@ -873,6 +874,15 @@ Sign a BrowserID public key. The server is given a public key, and returns a sig
 
 This request will fail unless the account's email address has been verified.
 
+Clients should include a query parameter `?service=<service-name>` for metrics and validation
+purposes.  The value of `<service-name>` should be `sync` when connecting to sync, or the
+OAuth client_id when connecting to an OAuth relier.
+
+If you do not specify a `service` parameter, or if you specify `service=sync`,
+this endpoint will assume the request is coming from a legacy Firefox sync client.
+If the sessionToken does not have a corresponding device record,
+one will be created automatically by the server.
+
 ___Parameters___
 
 * publicKey - the key to sign (run `bin/generate-keypair` from [browserid-crypto](https://github.com/mozilla/browserid-crypto))
@@ -1259,6 +1269,10 @@ must be present.
 Beware that if you provide `pushCallback` without the couple (`pushPublicKey` and `pushAuthKey`), both of
 the keys will be reset to an empty string.
 
+Devices should register with this endpoint *before* attempting to obtain a signed certificate
+and perform their first sync, so that an appropriate device name can be made available
+to other connected devices.
+
 ### Request
 
 ___Headers___
@@ -1553,6 +1567,48 @@ Failing requests may return the following errors:
 * status code 400, errno 130: invalid region
 * status code 400, errno 131: invalid message id
 * status code 500, errno 132: message rejected
+* status code 500, errno 999: unexpected error
+
+## GET /v1/sms/status
+
+:lock: HAWK-authenticated with the sessionToken.
+
+Returns SMS status for the current user.
+
+### Request
+
+___Headers___
+
+The request must include a Hawk header
+that authenticates the request
+using a `sessionToken`
+received from `/v1/account/create` or `/v1/account/login`.
+
+___Example___
+
+```sh
+curl -v \
+-X GET \
+-H "Host: api-accounts.dev.lcip.org" \
+-H 'Authorization: Hawk id="d4c5b1e3f5791ef83896c27519979b93a45e6d0da34c7509c5632ac35b28b48d", ts="1373391043", nonce="ohQjqb", hash="vBODPWhDhiRWM4tmI9qp+np+3aoqEFzdGuGk0h7bh9w=", mac="LAnpP3P2PXelC6hUoUaHP72nCqY5Iibaa3eeiGBqIIU="' \
+https://api-accounts.dev.lcip.org/v1/sms/status \
+```
+
+### Response
+
+Successful requests
+will return a `200 OK` response
+with an object
+containing an `ok` property
+indicating the result
+in the JSON body:
+
+```json
+{"ok":true}
+```
+
+Failing requests may return the following errors:
+
 * status code 500, errno 999: unexpected error
 
 ## POST /v1/get_random_bytes
