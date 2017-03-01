@@ -389,6 +389,10 @@ describe('bounce messages', () => {
             {
               name: 'X-Flow-Begin-Time',
               value: '1234'
+            },
+            {
+              name: 'Content-Language',
+              value: 'en'
             }
           ]
         }
@@ -400,10 +404,11 @@ describe('bounce messages', () => {
         assert.equal(mockDB.deleteAccount.callCount, 1)
         assert.equal(mockDB.deleteAccount.args[0][0].email, 'test@example.com')
         assert.equal(mockLog.messages.length, 4)
-        assert.equal(mockLog.messages[0].args[0]['event'], 'email.verifyLoginEmail.bounced')
+        assert.equal(mockLog.messages[0].args[0]['event'], 'email.verifyLoginEmail.bounced.other')
         assert.equal(mockLog.messages[0].args[0]['flow_id'], 'someFlowId')
         assert.equal(mockLog.messages[0].args[0]['flow_time'] > 0, true)
         assert.equal(mockLog.messages[0].args[0]['time'] > 0, true)
+        assert.equal(mockLog.messages[0].args[0]['locale'], 'en')
       })
     }
   )
@@ -434,7 +439,24 @@ describe('bounce messages', () => {
           ]
         },
         mail: {
-          headers: []
+          headers: [
+            {
+              name: 'X-Template-Name',
+              value: 'verifyLoginEmail'
+            },
+            {
+              name: 'X-Flow-Id',
+              value: 'someFlowId'
+            },
+            {
+              name: 'X-Flow-Begin-Time',
+              value: '1234'
+            },
+            {
+              name: 'Content-Language',
+              value: 'en'
+            }
+          ]
         }
       })
 
@@ -442,7 +464,11 @@ describe('bounce messages', () => {
         assert.equal(mockLog.messages.length, 4)
         assert.equal(mockLog.messages[1].args[0]['email'], 'test@aol.com')
         assert.equal(mockLog.messages[1].args[0]['domain'], 'aol.com')
-
+        assert.equal(mockLog.messages[0].args[0]['event'], 'email.verifyLoginEmail.bounced.aol.com')
+        assert.equal(mockLog.messages[0].args[0]['flow_id'], 'someFlowId')
+        assert.equal(mockLog.messages[0].args[0]['flow_time'] > 0, true)
+        assert.equal(mockLog.messages[0].args[0]['time'] > 0, true)
+        assert.equal(mockLog.messages[0].args[0]['locale'], 'en')
       })
     }
   )
